@@ -15,9 +15,12 @@ export default class AudioManager {
     this.smoothedLowFrequency = 0
     this.audioContext = null
 
-    this.song = {
-      url: 'https://p.scdn.co/mp3-preview/3be3fb77f5b2945c95e86d4c40ceceac20e5108f?cid=b62f0af3b0d54eca9bb49b99a2fc5820',
-    }
+    this.playlist = [
+      'songs/Ready.mp3',
+      'songs/Esc.mp3',
+      'songs/Broke Love.mp3',
+      'songs/Our Way.mp3',    ]
+    this.currentSongIndex = 0
   }
 
   async loadAudioBuffer() {
@@ -27,7 +30,7 @@ export default class AudioManager {
       this.audio = new THREE.Audio(audioListener)
       const audioLoader = new THREE.AudioLoader()
 
-      audioLoader.load(this.song.url, (buffer) => {
+      audioLoader.load(this.playlist[this.currentSongIndex], (buffer) => {
         this.audio.setBuffer(buffer)
         this.audio.setLoop(true)
         this.audio.setVolume(0.5)
@@ -52,6 +55,38 @@ export default class AudioManager {
     this.isPlaying = false
   }
 
+  stop() {
+    if (this.audio && this.audio.isPlaying) {
+      this.audio.stop()
+    }
+    this.isPlaying = false
+  }
+  next() {
+    this.stop()
+    this.currentSongIndex = (this.currentSongIndex + 1) % this.playlist.length
+    this.loadAudioBuffer().then(() => {
+        this.play()
+        this.updateCurrentSongDisplay()
+    })
+  }
+
+  previous() {
+    this.stop()
+    this.currentSongIndex = (this.currentSongIndex - 1 + this.playlist.length) % this.playlist.length
+    this.loadAudioBuffer().then(() => {
+        this.play()
+        this.updateCurrentSongDisplay()
+    })
+  }
+
+  getCurrentSong() {
+    let str =this.playlist[this.currentSongIndex].split('/').pop()
+    return str.split('.').shift() 
+  }
+
+  collectAudioData() {
+    this.frequencyArray = this.audioAnalyser.getFrequencyData()
+  }
   collectAudioData() {
     this.frequencyArray = this.audioAnalyser.getFrequencyData()
   }
@@ -94,5 +129,11 @@ export default class AudioManager {
 
     this.collectAudioData()
     this.analyzeFrequency()
+  }
+  updateCurrentSongDisplay() {
+    const currentSongElement = document.getElementById('currentSong')
+    if (currentSongElement) {
+      currentSongElement.textContent = `Current Song: ${this.getCurrentSong()}`
+    }
   }
 }

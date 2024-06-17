@@ -44,6 +44,7 @@ export default class App {
     App.holder.sortObjects = false
 
     App.gui = new dat.GUI()
+    dat.GUI.toggleHide()
 
     this.createManagers()
 
@@ -64,11 +65,32 @@ export default class App {
     document.querySelector('.user_interaction').remove()
 
     App.audioManager.play()
+    this.updateCurrentSongDisplay()
 
     this.particles = new ReativeParticles()
     this.particles.init()
 
     this.update()
+
+    // Set up event listeners for the control buttons
+    document.getElementById('prevBtn').addEventListener('click', this.prevSong.bind(this))
+    document.getElementById('nextBtn').addEventListener('click', this.nextSong.bind(this))
+  }
+
+
+  prevSong() {
+    App.audioManager.previous()
+    this.updateCurrentSongDisplay()
+
+  }
+
+  nextSong() {
+    App.audioManager.next()
+    this.updateCurrentSongDisplay()
+  }
+
+  updateCurrentSongDisplay() {
+    App.audioManager.updateCurrentSongDisplay()
   }
 
   resize() {
