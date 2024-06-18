@@ -26,7 +26,7 @@ export default class App {
       alpha: true,
     })
 
-    this.renderer.setClearColor(0x000000, 0)
+    this.renderer.setClearColor(0xffffff, 0)
     this.renderer.setSize(window.innerWidth, window.innerHeight)
     this.renderer.autoClear = false
     document.querySelector('.content').appendChild(this.renderer.domElement)
@@ -37,6 +37,7 @@ export default class App {
 
     this.scene = new THREE.Scene()
     this.scene.add(this.camera)
+    this.scene.background= new THREE.Color(0xffffff)
 
     App.holder = new THREE.Object3D()
     App.holder.name = 'holder'

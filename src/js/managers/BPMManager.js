@@ -27,6 +27,7 @@ export default class BPMManager extends EventDispatcher {
     const { bpm } = await guess(audioBuffer)
     this.setBPM(bpm)
     console.log(`BPM detected: ${bpm}`)
+    return bpm;
   }
 
   getBPMDuration() {

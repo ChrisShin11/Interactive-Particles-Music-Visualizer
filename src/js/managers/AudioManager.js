@@ -1,7 +1,8 @@
 import * as THREE from 'three'
-
-export default class AudioManager {
+import { EventDispatcher } from 'three';
+export default class AudioManager extends EventDispatcher{
   constructor() {
+    super();
     this.frequencyArray = []
     this.frequencyData = {
       low: 0,
@@ -16,7 +17,7 @@ export default class AudioManager {
     this.audioContext = null
 
     this.playlist = [
-      'songs/Ready.mp3',
+      'songs/Esc.mp3',
       'songs/Esc.mp3',
       'songs/Broke Love.mp3',
       'songs/Our Way.mp3',    ]
@@ -36,13 +37,14 @@ export default class AudioManager {
         this.audio.setVolume(0.5)
         this.audioContext = this.audio.context
         this.bufferLength = this.audioAnalyser.data.length
+        this.dispatchEvent({ type: 'audioLoaded' , audioBuffer: buffer});
         resolve()
       })
 
       this.audioAnalyser = new THREE.AudioAnalyser(this.audio, 1024)
     })
 
-    return promise
+    return promise;
   }
 
   play() {
