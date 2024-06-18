@@ -17,7 +17,7 @@ export default class AudioManager extends EventDispatcher{
     this.audioContext = null
 
     this.playlist = [
-      'songs/Esc.mp3',
+      'songs/Ready.mp3',
       'songs/Esc.mp3',
       'songs/Broke Love.mp3',
       'songs/Our Way.mp3',    ]
